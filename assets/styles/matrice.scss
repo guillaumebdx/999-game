@@ -1,0 +1,55 @@
+.matrice {
+
+  input {
+    position: absolute;
+    left: -9999px;
+  }
+
+  label {
+    font-family: 'Architects Daughter', cursive;
+    font-weight: bold;
+    font-size: 30px;
+    width: 40px;
+    display: block;
+    position: relative;
+    padding: 20px 20px 20px 20px;
+    border: 2px solid black;
+    color: #fff;
+    background-color: $pink;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s, box-shadow .2s;
+  }
+
+
+  label:hover, input:focus + label {
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+  }
+
+  input:checked + label {
+    background-color: white;
+    color: black;
+  }
+
+  input:checked + label::before {
+    background-color: #fff !important;
+  }
+
+  .block-2 {
+    background-color: #9900FF;
+  }
+
+  .block-3 {
+    background-color: #0033FF;
+  }
+
+  .block-4 {
+    background-color: #FF3300;
+  }
+
+  .block-5 {
+    background-color: #52CC30;
+  }
+}

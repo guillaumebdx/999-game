@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MatriceController!{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {% for block in form.blocks %}
+        {% if loop.index == 1 %}
+        <div style="display: flex">
+        {% endif %}
+        {{ form_row(block) }}
+        {% if loop.index %5 == 0 %}
+            </div>
+            {% if loop.last != true %}
+                <div style="display: flex">
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+                    <button>OK</button>
+
+{{ form_end(form) }}
+{% endblock %}

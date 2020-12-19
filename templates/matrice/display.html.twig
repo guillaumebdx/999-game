@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Play !{% endblock %}
+
+{% block body %}
+    <div class="matrice">
+        <form action="" method="post">
+            {% for i in 1..matrice.blocks|length %}
+                {% if loop.index == 1 %}
+                    <div class="d-flex">
+                {% endif %}
+                 {% include 'matrice/_block.html.twig' %}
+                {% if loop.index %5 == 0 %}
+                    </div>
+                    {% if loop.last != true %}
+                        <div class="d-flex">
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <button>OK</button>
+        </form>
+    </div>
+{% endblock %}

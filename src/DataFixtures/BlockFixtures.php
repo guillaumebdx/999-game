@@ -11,13 +11,15 @@ class BlockFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        for ($i=1; $i<=9; $i++) {
-            $block = new Block();
-            $block->setX($i);
-            for ($j=1; $j<=9; $j++) {
+        for ($i=1; $i<=5; $i++) {
+            for ($j=1; $j<=5; $j++) {
+                $block = new Block();
+                $block->setX($i);
                 $block->setY($j);
+                $block->setNumber(rand(1,5));
+                $block->setMatrice($this->getReference('5x5'));
+                $manager->persist($block);
             }
-            $manager->persist($block);
         }
         $manager->flush();
     }

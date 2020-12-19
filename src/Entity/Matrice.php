@@ -29,6 +29,11 @@ class Matrice
      */
     private $blocks;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $multiple;
+
     public function __construct()
     {
         $this->blocks = new ArrayCollection();
@@ -77,6 +82,18 @@ class Matrice
                 $block->setMatrice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMultiple(): ?int
+    {
+        return $this->multiple;
+    }
+
+    public function setMultiple(int $multiple): self
+    {
+        $this->multiple = $multiple;
 
         return $this;
     }

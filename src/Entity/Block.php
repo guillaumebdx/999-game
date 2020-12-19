@@ -32,6 +32,16 @@ class Block
      */
     private $matrice;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $number;
+
+    public function getPosition()
+    {
+        return $this->x . '-' . $this->y . '(' . $this->number . ')';
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +79,18 @@ class Block
     public function setMatrice(?Matrice $matrice): self
     {
         $this->matrice = $matrice;
+
+        return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
 
         return $this;
     }

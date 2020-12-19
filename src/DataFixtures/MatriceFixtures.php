@@ -11,9 +11,10 @@ class MatriceFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $matrice = new Matrice();
-        $matrice->setName('9x9');
+        $matrice->setName('5x5');
+        $matrice->setMultiple(5);
         $manager->persist($matrice);
-        $this->addReference('9x9', $matrice);
+        $this->addReference('5x5', $matrice);
         $manager->flush();
     }
 }
