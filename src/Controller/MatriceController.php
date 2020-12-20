@@ -98,8 +98,10 @@ class MatriceController extends AbstractController
                     $scoreManager->addPoint(1);
                     $scoreManager->addMultiplicator(1);
                 } else {
+                    if ($newValue !== $block->getNumber()) {
+                        $scoreManager->addPoint(1);
+                    }
                     $block->setNumber($newValue);
-                    $scoreManager->addPoint(1);
                 }
                 $entityManager->persist($block);
             }
