@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=MatriceRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Matrice
 {
@@ -39,6 +40,22 @@ class Matrice
      * @ORM\Column(type="integer", nullable=true)
      */
     private $incrementNewBlock;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="matrices")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $score;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     public function __construct()
     {
@@ -114,5 +131,50 @@ class Matrice
         $this->incrementNewBlock = $incrementNewBlock;
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(?int $score): self
+    {
+        $this->score = $score;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Gets triggered only on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime();
     }
 }

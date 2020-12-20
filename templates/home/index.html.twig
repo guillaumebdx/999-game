@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon espace{% endblock %}
+
+{% block body %}
+    <div class="home">
+        <h1>{{ matrices|length }} parties</h1>
+        <ul class="list-group">
+            {% for matrice in matrices %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ matrice.name }} - Commencée le {{ matrice.createdAt|date('d/m/y à H:i:s') }}
+                        <a href="{{ path('matrice', {matrice: matrice.id}) }}"> Revoir </a>
+                    <span class="badge badge-primary badge-pill">{{ matrice.score }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

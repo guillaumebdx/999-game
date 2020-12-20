@@ -2,7 +2,8 @@ const blocks = document.getElementsByClassName('block');
 let previousX = 0;
 let previousY = 0;
 let previousNumber = 0;
-for (let i=0; i<= blocks.length; i++) {
+
+for (let i=0; i< blocks.length; i++) {
     blocks[i].addEventListener('click', (event) => {
         let currentX = parseInt(blocks[i].getAttribute('data-x'));
         let currentY = parseInt(blocks[i].getAttribute('data-y'));

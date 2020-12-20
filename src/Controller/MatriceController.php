@@ -13,6 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class MatriceController
+ * @package App\Controller
+ * @Route("/game")
+ */
 class MatriceController extends AbstractController
 {
     /**
@@ -42,6 +47,8 @@ class MatriceController extends AbstractController
     public function replay(EntityManagerInterface $manager)
     {
         $matrice = new Matrice();
+        $matrice->setUser($this->getUser());
+        $matrice->setScore(0);
         $matrice->setName('5x5');
         $matrice->setMultiple(5);
         $manager->persist($matrice);
@@ -68,6 +75,9 @@ class MatriceController extends AbstractController
                             EntityManagerInterface $entityManager,
                             BlockManager $blockManager)
     {
+        if ($matrice->getUser() !== $this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
         $blockIds = $request->get('blocks');
         if ($request->getMethod() === 'POST' && $blockIds) {
             $blocks = [];
