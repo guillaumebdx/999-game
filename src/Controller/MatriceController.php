@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\BlockService\BlockManager;
+use App\BlockService\ScoreManager;
 use App\Entity\Block;
 use App\Entity\Matrice;
 use App\Form\MatriceType;
@@ -57,7 +58,7 @@ class MatriceController extends AbstractController
                 $block = new Block();
                 $block->setX($i);
                 $block->setY($j);
-                $block->setNumber(rand(1, Block::MAX_NUMBER -1));
+                $block->setNumber(rand(1, Block::MAX_NUMBER -3));
                 $block->setMatrice($matrice);
                 $manager->persist($block);
             }
@@ -73,8 +74,10 @@ class MatriceController extends AbstractController
                             Request $request,
                             BlockRepository $blockRepository,
                             EntityManagerInterface $entityManager,
-                            BlockManager $blockManager)
+                            BlockManager $blockManager,
+                            ScoreManager $scoreManager)
     {
+        $scoreManager = new ScoreManager();
         if ($matrice->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('home');
         }
@@ -92,12 +95,16 @@ class MatriceController extends AbstractController
 
                 if ($newValue === Block::MAX_NUMBER) {
                     $block->setNumber(0);
+                    $scoreManager->addPoint(1);
+                    $scoreManager->addMultiplicator(1);
                 } else {
                     $block->setNumber($newValue);
+                    $scoreManager->addPoint(1);
                 }
                 $entityManager->persist($block);
             }
-
+            $matrice->setScore($matrice->getScore() + $scoreManager->getTotalScore());
+            $entityManager->persist($matrice);
             $inDbBlocks = $blockRepository->findByMatrice($matrice);
 
             //get all unchecked blocks and add it in blocks
