@@ -3,6 +3,10 @@
 {% block title %}Admin{% endblock %}
 
 {% block body %}
+    <div>
+        <h1>Best score</h1>
+        <a href="{{ path('matrice', {matrice: best_matrice.id}) }}">{{ best_matrice.score }}</a> - {{ best_matrice.user.username }} - {{ best_matrice.createdAt|date('d/m/y H:m:i') }}
+    </div>
     <h1>Utilisateurs</h1>
     {% for user in users %}
         <h2>

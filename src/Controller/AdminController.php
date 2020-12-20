@@ -18,7 +18,7 @@ class AdminController extends AbstractController
      */
     public function index(UserRepository $userRepository, MatriceRepository $matriceRepository): Response
     {
-        $bestMatrice = $matriceRepository->findOneBy([], ['score' => 'ASC']);
+        $bestMatrice = $matriceRepository->findOneBy([], ['score' => 'DESC']);
         return $this->render('admin/index.html.twig', [
             'users' => $userRepository->findAll(),
             'best_matrice' => $bestMatrice,
