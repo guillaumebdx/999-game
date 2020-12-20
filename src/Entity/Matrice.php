@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Matrice
 {
+    const MAX_INCREMENT = 20;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -33,6 +34,11 @@ class Matrice
      * @ORM\Column(type="integer")
      */
     private $multiple;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $incrementNewBlock;
 
     public function __construct()
     {
@@ -94,6 +100,18 @@ class Matrice
     public function setMultiple(int $multiple): self
     {
         $this->multiple = $multiple;
+
+        return $this;
+    }
+
+    public function getIncrementNewBlock(): ?int
+    {
+        return $this->incrementNewBlock;
+    }
+
+    public function setIncrementNewBlock(?int $incrementNewBlock): self
+    {
+        $this->incrementNewBlock = $incrementNewBlock;
 
         return $this;
     }

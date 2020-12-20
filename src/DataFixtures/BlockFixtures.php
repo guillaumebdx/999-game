@@ -16,7 +16,7 @@ class BlockFixtures extends Fixture implements DependentFixtureInterface
                 $block = new Block();
                 $block->setX($i);
                 $block->setY($j);
-                $block->setNumber(rand(1,5));
+                $block->setNumber(rand(1, Block::MAX_NUMBER -1));
                 $block->setMatrice($this->getReference('5x5'));
                 $manager->persist($block);
             }

@@ -5,19 +5,20 @@
 {% block body %}
     <div class="matrice">
         <form action="" method="post">
-            {% for i in 1..matrice.blocks|length %}
+            {% for block in matrice.blocks %}
                 {% if loop.index == 1 %}
                     <div class="d-flex">
                 {% endif %}
                  {% include 'matrice/_block.html.twig' %}
-                {% if loop.index %5 == 0 %}
+                {% if loop.index %matrice.multiple == 0 %}
                     </div>
                     {% if loop.last != true %}
                         <div class="d-flex">
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            <button>OK</button>
+            <button class="btn">OK</button>
         </form>
+        <a onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay') }}">Rejouer</a>
     </div>
 {% endblock %}
