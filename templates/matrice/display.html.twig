@@ -17,8 +17,9 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            <button class="btn">OK</button>
+            <button class="btn btn-primary">OK</button>
         </form>
-        <a onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay') }}">Rejouer</a>
+        <a class="btn btn-secondary" role="button" onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay') }}">Rejouer</a>
     </div>
+
 {% endblock %}
