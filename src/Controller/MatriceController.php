@@ -8,6 +8,7 @@ use App\Entity\Block;
 use App\Entity\Matrice;
 use App\Form\MatriceType;
 use App\Repository\BlockRepository;
+use App\Repository\MatriceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,12 +76,13 @@ class MatriceController extends AbstractController
                             BlockRepository $blockRepository,
                             EntityManagerInterface $entityManager,
                             BlockManager $blockManager,
-                            ScoreManager $scoreManager)
+                            ScoreManager $scoreManager,
+                            MatriceRepository $matriceRepository)
     {
-        $scoreManager = new ScoreManager();
         if ($matrice->getUser() !== $this->getUser() && !$this->getUser()->isAdmin()) {
             return $this->redirectToRoute('home');
         }
+
         $blockIds = $request->get('blocks');
         if ($request->getMethod() === 'POST' && $blockIds) {
             $blocks = [];
@@ -144,7 +146,8 @@ class MatriceController extends AbstractController
         }
 
         return $this->render('matrice/display.html.twig', [
-           'matrice' => $matrice,
+            'matrice' => $matrice,
+            'best_matrice' => $matriceRepository->findOneBy([], ['score' => 'DESC']),
         ]);
     }
 }

@@ -3,7 +3,10 @@
 {% block title %}Play !{% endblock %}
 
 {% block body %}
-    Score : {{ matrice.score }}
+    <p>
+    Score à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
+    Score : <strong>{{ matrice.score }}</strong>
+    </p>
     <div class="matrice">
         <form action="" method="post">
             {% for block in matrice.blocks %}
