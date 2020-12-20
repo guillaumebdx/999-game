@@ -78,7 +78,7 @@ class MatriceController extends AbstractController
                             ScoreManager $scoreManager)
     {
         $scoreManager = new ScoreManager();
-        if ($matrice->getUser() !== $this->getUser()) {
+        if ($matrice->getUser() !== $this->getUser() && !$this->getUser()->isAdmin()) {
             return $this->redirectToRoute('home');
         }
         $blockIds = $request->get('blocks');

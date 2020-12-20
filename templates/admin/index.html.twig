@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+    <h1>Utilisateurs</h1>
+    {% for user in users %}
+        <h2>
+            {{ user.username }}
+        </h2>
+        {% for matrice in user.matrices %}
+            <a href="{{ path('matrice', {matrice: matrice.id}) }}">{{ matrice.score }} </a>{{ matrice.createdAt|date('d/m/y H:m:i') }}
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
