@@ -9,7 +9,7 @@
             {% for matrice in matrices %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ matrice.user.username }}
-                    <span>{{ matrice.createdAt|date('d/m/y') }}</span>
+                    (le {{ matrice.createdAt|date('d/m/y') }})
                     <span class="badge badge-primary badge-pill">{{ matrice.score }}</span>
                 </li>
             {% endfor %}
