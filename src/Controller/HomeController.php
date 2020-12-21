@@ -20,4 +20,15 @@ class HomeController extends AbstractController
             'matrices' => $matrices,
         ]);
     }
+
+    /**
+     * @Route("/ranking", name="ranking")
+     */
+    public function ranking(MatriceRepository $matriceRepository)
+    {
+        $matrices = $matriceRepository->findBy([], ['score' => 'DESC'], 50);
+        return $this->render('home/ranking.html.twig', [
+            'matrices' => $matrices,
+        ]);
+    }
 }
