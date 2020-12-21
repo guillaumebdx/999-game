@@ -59,7 +59,7 @@ class MatriceController extends AbstractController
                 $block = new Block();
                 $block->setX($i);
                 $block->setY($j);
-                $block->setNumber(rand(1, Block::MAX_NUMBER -3));
+                $block->setNumber(rand(1, Block::MAX_NUMBER -1));
                 $block->setMatrice($matrice);
                 $manager->persist($block);
             }

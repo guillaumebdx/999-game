@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Block
 {
-    const MAX_NUMBER = 8;
+    const MAX_NUMBER = 6;
 
     /**
      * @ORM\Id
