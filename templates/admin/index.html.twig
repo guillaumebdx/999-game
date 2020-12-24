@@ -3,6 +3,11 @@
 {% block title %}Admin{% endblock %}
 
 {% block body %}
+   <h2> choisir un niveaux </h2>
+
+    {% for level in levels%}
+        <a href="{{ path('admin_level', {level: level.id}) }}">{{ level.level }}</a>
+    {% endfor %}
     <div>
         <h1>Best score</h1>
         <a href="{{ path('matrice', {matrice: best_matrice.id}) }}">{{ best_matrice.score }}</a> - {{ best_matrice.user.username }} - {{ best_matrice.createdAt|date('d/m/y H:i:s') }}
@@ -10,7 +15,7 @@
     <h1>Utilisateurs</h1>
     {% for user in users %}
         <h2>
-            {{ user.username }}
+            {{ user.username }} - {{ user.matrices|length }} parties -  {% if user.level %}Niveau {{ user.level.level }} {% else %} Pas de carriere {% endif %}
         </h2>
         {% for matrice in user.matrices %}
             <a href="{{ path('matrice', {matrice: matrice.id}) }}">{{ matrice.score }} </a>{{ matrice.createdAt|date('d/m/y H:i:s') }}

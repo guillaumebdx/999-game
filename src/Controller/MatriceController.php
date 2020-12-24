@@ -5,15 +5,18 @@ namespace App\Controller;
 use App\BlockService\BlockManager;
 use App\BlockService\ScoreManager;
 use App\Entity\Block;
+use App\Entity\Level;
 use App\Entity\Matrice;
 use App\Form\MatriceType;
 use App\Repository\BlockRepository;
+use App\Repository\LevelRepository;
 use App\Repository\MatriceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class MatriceController
@@ -44,22 +47,38 @@ class MatriceController extends AbstractController
     }
 
     /**
-     * @Route("/replay", name="replay")
+     * @Route("/replay/{isCarriere}", name="replay")
+     *
      */
-    public function replay(EntityManagerInterface $manager)
+    public function replay($isCarriere,
+                           EntityManagerInterface $manager,
+                           LevelRepository $levelRepository)
     {
-        $matrice = new Matrice();
-        $matrice->setUser($this->getUser());
+        $user = $this->getUser();
+        $multiple  = 5;
+        $maxNumber = 6;
+        $matrice   = new Matrice();
+        $matrice->setIsTraining(true);
+        if ($isCarriere) {
+            $matrice->setIsTraining(false);
+            if (!$user->getLevel()) {
+                $levelZero = $levelRepository->findOneByLevel(0);
+                $user->setLevel($levelZero);
+            }
+            $multiple  = $user->getLevel()->getMultiple();
+            $maxNumber = $user->getLevel()->getMaxNumber();
+        }
+        $matrice->setUser($user);
         $matrice->setScore(0);
-        $matrice->setName('5x5');
-        $matrice->setMultiple(5);
+        $matrice->setName($multiple . 'x' . $multiple);
+        $matrice->setMultiple($multiple);
         $manager->persist($matrice);
-        for ($i=1; $i<=5; $i++) {
-            for ($j=1; $j<=5; $j++) {
+        for ($i=1; $i<=$multiple; $i++) {
+            for ($j=1; $j<=$multiple; $j++) {
                 $block = new Block();
                 $block->setX($i);
                 $block->setY($j);
-                $block->setNumber(rand(1, Block::MAX_NUMBER -1));
+                $block->setNumber(rand(1, $maxNumber -1));
                 $block->setMatrice($matrice);
                 $manager->persist($block);
             }
@@ -77,36 +96,19 @@ class MatriceController extends AbstractController
                             EntityManagerInterface $entityManager,
                             BlockManager $blockManager,
                             ScoreManager $scoreManager,
-                            MatriceRepository $matriceRepository)
+                            MatriceRepository $matriceRepository,
+                            LevelRepository $levelRepository)
     {
         if ($matrice->getUser() !== $this->getUser() && !$this->getUser()->isAdmin()) {
             return $this->redirectToRoute('home');
         }
 
         $blockIds = $request->get('blocks');
-        if ($request->getMethod() === 'POST' && $blockIds) {
-            $blocks = [];
-            foreach ($blockIds as $blockId) {
-                $block      = $blockRepository->find($blockId);
-                $blocks[$block->getX() . '-' . $block->getY()] = $block;
-                $blockCount = count($blockIds);
-                $newValue   = $blockCount > Block::MAX_NUMBER ? Block::MAX_NUMBER : $blockCount;
-                if ($newValue < $block->getNumber()) {
-                    $newValue = $block->getNumber();
-                }
 
-                if ($newValue === Block::MAX_NUMBER) {
-                    $block->setNumber(0);
-                    $scoreManager->addPoint(1);
-                    $scoreManager->addMultiplicator(1);
-                } else {
-                    if ($newValue !== $block->getNumber()) {
-                        $scoreManager->addPoint(1);
-                    }
-                    $block->setNumber($newValue);
-                }
-                $entityManager->persist($block);
-            }
+        if ($request->getMethod() === 'POST' && $blockIds) {
+
+            $maxNumber = $matrice->getIsTraining() ? Block::MAX_NUMBER : $matrice->getUser()->getLevel()->getMaxNumber();
+            $blocks   = $blockManager->createBlocks($blockIds, $maxNumber);
             $matrice->setScore($matrice->getScore() + $scoreManager->getTotalScore());
             $entityManager->persist($matrice);
             $inDbBlocks = $blockRepository->findByMatrice($matrice);
@@ -130,12 +132,13 @@ class MatriceController extends AbstractController
                                 $entityManager->persist($currentBlock);
                             } else {
                                 if ($matrice->getIncrementNewBlock() < Matrice::MAX_INCREMENT) {
-                                    $currentBlock->setNumber(rand(1,Block::MAX_NUMBER -1));
+                                    $currentBlock->setNumber(rand(1,$maxNumber -1));
                                     $matrice->setIncrementNewBlock($matrice->getIncrementNewBlock()+1);
                                 } else {
                                     $currentBlock->setNumber(999);
                                 }
                                 $entityManager->persist($currentBlock);
+
                             }
 
                         }
@@ -143,11 +146,22 @@ class MatriceController extends AbstractController
                 }
             }
             $entityManager->flush();
+            if (!$matrice->getIsTraining()) {
+                $currentLevel = $this->getUser()->getLevel();
+                if ($matrice->getScore() >= $currentLevel->getTarget()) {
+                    $newLevel = $levelRepository->findOneByLevel($currentLevel->getLevel() +1);
+                    $this->getUser()->setLevel($newLevel);
+                    $entityManager->persist($this->getUser());
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Niveau réussi, vous pouvez passer au suivant');
+                    return $this->redirectToRoute('home');
+                }
+            }
         }
 
         return $this->render('matrice/display.html.twig', [
             'matrice' => $matrice,
-            'best_matrice' => $matriceRepository->findOneBy([], ['score' => 'DESC']),
+            'best_matrice' => $matriceRepository->findOneBy([], ['score' => 'DESC', 'isTraining' => 'DESC']),
         ]);
     }
 }

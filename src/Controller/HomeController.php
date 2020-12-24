@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\LevelRepository;
 use App\Repository\MatriceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +13,16 @@ class HomeController extends AbstractController
     /**
      * @Route("/home", name="home")
      */
-    public function index(MatriceRepository $matriceRepository): Response
+    public function index(MatriceRepository $matriceRepository,
+                          LevelRepository $levelRepository): Response
     {
         $user = $this->getUser();
-        $matrices = $matriceRepository->findBy(['user' => $user], ['createdAt' => 'DESC']);
+        $maxLevel = $levelRepository->findOneBy([], ['level' => 'DESC']);
+        $matrices = $matriceRepository->findBy(['user' => $user, 'isTraining' => true], ['createdAt' => 'DESC']);
+
         return $this->render('home/index.html.twig', [
             'matrices' => $matrices,
+            'max_level' => $maxLevel->getLevel(),
         ]);
     }
 
@@ -26,7 +31,7 @@ class HomeController extends AbstractController
      */
     public function ranking(MatriceRepository $matriceRepository)
     {
-        $matrices = $matriceRepository->findBy([], ['score' => 'DESC'], 50);
+        $matrices = $matriceRepository->findBy(['isTraining' => true], ['score' => 'DESC'], 50);
         return $this->render('home/ranking.html.twig', [
             'matrices' => $matrices,
         ]);

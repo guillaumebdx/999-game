@@ -57,6 +57,11 @@ class Matrice
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isTraining;
+
     public function __construct()
     {
         $this->blocks = new ArrayCollection();
@@ -176,5 +181,17 @@ class Matrice
     public function onPrePersist()
     {
         $this->createdAt = new \DateTime();
+    }
+
+    public function getIsTraining(): ?bool
+    {
+        return $this->isTraining;
+    }
+
+    public function setIsTraining(bool $isTraining): self
+    {
+        $this->isTraining = $isTraining;
+
+        return $this;
     }
 }

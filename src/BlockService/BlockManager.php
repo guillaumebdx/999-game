@@ -16,21 +16,49 @@ class BlockManager
 
     private $blockRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, BlockRepository $blockRepository)
+    private $scoreManager;
+
+    public function __construct(EntityManagerInterface $entityManager,
+                                BlockRepository $blockRepository,
+                                ScoreManager $scoreManager)
     {
         $this->entityManager = $entityManager;
         $this->blockRepository = $blockRepository;
+        $this->scoreManager = $scoreManager;
     }
 
-
-    public function isTop($block)
+    public function setBlockValue($blockCount, $block, $maxNumber)
     {
-        $isTop = false;
-
-        if ($block->getX() === 1) {
-            $isTop = true;
+        $newValue   = $blockCount > $maxNumber ? $maxNumber : $blockCount;
+        if ($newValue < $block->getNumber()) {
+            $newValue = $block->getNumber();
         }
-        return $isTop;
+
+        if ($newValue === $maxNumber) {
+            $block->setNumber(0);
+
+            $this->scoreManager->addPoint(1);
+            $this->scoreManager->addMultiplicator(1);
+        } else {
+            if ($newValue !== $block->getNumber()) {
+                $this->scoreManager->addPoint(1);
+            }
+            $block->setNumber($newValue);
+        }
+    }
+
+    public function createBlocks($blockIds, $maxNumber)
+    {
+        $blocks = [];
+        foreach ($blockIds as $blockId) {
+            $block      = $this->blockRepository->find($blockId);
+            $blocks[$block->getX() . '-' . $block->getY()] = $block;
+            $blockCount = count($blockIds);
+            $this->setBlockValue($blockCount, $block, $maxNumber);
+
+            $this->entityManager->persist($block);
+        }
+        return $blocks;
     }
 
 }

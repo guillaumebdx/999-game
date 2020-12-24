@@ -4,8 +4,23 @@
 
 {% block body %}
     <p>
-    Score à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
-    Score : <strong>{{ matrice.score }}</strong>
+        {% if matrice.isTraining %}
+        Score entrainement à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
+        {% else %}
+            <span class="badge badge-primary">
+            Niveau : {{ app.user.level.level}}
+            </span>
+            <span class="badge badge-secondary">
+            Numéro max : {{ app.user.level.maxNumber -1}}
+            </span>
+            <span class="badge badge-secondary">
+                Grille : {{ app.user.level.multiple }}x{{ app.user.level.multiple }}
+            </span>
+            <span class="badge badge-secondary">
+                Objectif : {{ app.user.level.target }}
+            </span><br>
+        {% endif %}
+        Score : <strong>{{ matrice.score }}</strong>
     </p>
     <div class="matrice">
         <form action="" method="post">
@@ -23,7 +38,8 @@
             {% endfor %}
             <button class="btn btn-primary">OK</button>
         </form>
-        <a class="btn btn-secondary" role="button" onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay') }}">Rejouer</a>
+        {% if matrice.isTraining %}
+            <a class="btn btn-secondary" role="button" onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay', { isCarriere: 0 }) }}">Rejouer</a>
+        {% endif %}
     </div>
-<div>V1.1 : Maintenant, le chiffre max est 5. C'était peut être trop difficile avec les 6 et les 7</div>
 {% endblock %}

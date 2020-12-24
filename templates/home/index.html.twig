@@ -4,7 +4,26 @@
 
 {% block body %}
     <div class="home">
-        <h1>{{ matrices|length }} parties</h1>
+        <h1>Niveau</h1>
+        <p>
+            Niveau en cours : {{ app.user.level ? app.user.level.level : 0 }} / {{ max_level }}
+            <br>
+            {% if app.user.level is null %}
+                <a class="btn btn-primary" role="button" href="{{ path('replay', {isCarriere: 1}) }}">
+                    Commencer une carrière
+                </a>
+
+            {% else %}
+                {% if app.user.level.level > max_level %}
+                    <span>FIN - ATTENDEZ QUE GUILLAUME DAIGNE CRÉER DE NOUVEAUX NIVEAUX</span>
+                {% else %}
+                    <a class="btn btn-primary" role="button" href="{{ path('replay', {isCarriere: 1}) }}">
+                        Continuer
+                    </a>
+                {% endif %}
+            {% endif %}
+        </p>
+        <h1>{{ matrices|length }} entrainements</h1>
         <ul class="list-group">
             {% for matrice in matrices %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
