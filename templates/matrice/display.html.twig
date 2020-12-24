@@ -5,8 +5,10 @@
 {% block body %}
     <p>
         {% if matrice.isTraining %}
-        Score entrainement à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
+            {# todo à debug voir controller
+            Score entrainement à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
         {% else %}
+            #}
             <span class="badge badge-primary">
             Niveau : {{ app.user.level.level}}
             </span>
