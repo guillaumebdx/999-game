@@ -3,15 +3,21 @@
 {% block title %}Admin{% endblock %}
 
 {% block body %}
-   <h2> choisir un niveaux </h2>
+   <h2> choisir un niveaux pour switcher </h2>
 
     {% for level in levels%}
-        <a href="{{ path('admin_level', {level: level.id}) }}">{{ level.level }}</a>
+        <a class="badge badge-pill badge-warning" href="{{ path('admin_level', {level: level.id}) }}">{{ level.level }}</a>
+    {% endfor %}
+    <h2> choisir un niveaux à mettre à jour </h2>
+
+    {% for level in levels%}
+         <a class="badge badge-pill badge-info" href="{{ path('admin_update_level', {level: level.id}) }}">{{ level.level }}</a>
     {% endfor %}
     <div>
+    <a class="btn btn-primary" href="{{ path('admin_create_level') }}">Créer un niveau</a>
+    </div>
         <h1>Best score</h1>
         <a href="{{ path('matrice', {matrice: best_matrice.id}) }}">{{ best_matrice.score }}</a> - {{ best_matrice.user.username }} - {{ best_matrice.createdAt|date('d/m/y H:i:s') }}
-    </div>
     <h1>Utilisateurs</h1>
     {% for user in users %}
         <h2>
