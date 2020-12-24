@@ -161,7 +161,7 @@ class MatriceController extends AbstractController
         //todo debug best matrice
         return $this->render('matrice/display.html.twig', [
             'matrice' => $matrice,
-            'best_matrice' => $matriceRepository->findOneBy([''], ['score' => 'DESC', 'isTraining' => 'DESC']),
+            //'best_matrice' => $matriceRepository->findOneBy([''], ['score' => 'DESC', 'isTraining' => 'DESC']),
         ]);
     }
 }
