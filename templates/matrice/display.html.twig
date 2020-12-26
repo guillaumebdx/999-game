@@ -5,9 +5,7 @@
 {% block body %}
     <p>
         {% if matrice.isTraining %}
-            {# todo
-          {#  Score entrainement à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
-        #}
+            Score entrainement à battre : <strong>{{ best_matrice.score }}</strong> ({{ best_matrice.user.username }})<br>
         {% else %}
 
             <span class="badge badge-primary">
