@@ -44,5 +44,6 @@
         {% if matrice.isTraining %}
             <a class="btn btn-secondary" role="button" onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay', { isCarriere: 0 }) }}">Rejouer</a>
         {% endif %}
+        <button class="btn btn-secondary reset-button" id="raz">RAZ</button>
     </div>
 {% endblock %}

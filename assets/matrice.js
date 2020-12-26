@@ -1,4 +1,5 @@
 const blocks = document.getElementsByClassName('block');
+const inputs = document.getElementsByClassName('checkBoxBlock');
 let previousX = 0;
 let previousY = 0;
 let previousNumber = 0;
@@ -58,8 +59,19 @@ for (let i=0; i< blocks.length; i++) {
             previousNumber = parseInt(event.target.textContent);
             event.target.classList.add('forbiddenLabel')
         }
-
-
-
     })
 }
+
+const resetButton = document.getElementById('raz');
+resetButton.addEventListener('click', (e) => {
+    for (let i=0; i< inputs.length; i++) {
+        inputs[i].checked = false;
+        blocks[i].classList.remove('forbiddenLabel')
+        previousX = 0;
+        previousY = 0;
+        previousNumber = 0;
+    }
+})
+
+
+

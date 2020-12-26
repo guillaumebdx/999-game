@@ -1,4 +1,4 @@
-<input id="check-{{ block.id }}" type="checkbox" name="blocks[]" value="{{ block.id }}">
+<input id="check-{{ block.id }}" type="checkbox" name="blocks[]" value="{{ block.id }}" class="checkBoxBlock">
 <label data-x="{{ block.x }}" data-y="{{ block.y }}" for="check-{{ block.id }}" class="block-{{ block.number }} block {{ block.number == 999 ? 'forbiddenLabel' : '' }}">
     {{ block.number }}
 </label>
