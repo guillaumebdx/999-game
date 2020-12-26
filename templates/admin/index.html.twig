@@ -16,15 +16,38 @@
     <div>
     <a class="btn btn-primary" href="{{ path('admin_create_level') }}">Créer un niveau</a>
     </div>
-        <h1>Best score</h1>
+    <div>
+        <h2>Best score</h2>
         <a href="{{ path('matrice', {matrice: best_matrice.id}) }}">{{ best_matrice.score }}</a> - {{ best_matrice.user.username }} - {{ best_matrice.createdAt|date('d/m/y H:i:s') }}
-    <h1>Utilisateurs</h1>
-    {% for user in users %}
-        <h2>
-            {{ user.username }} - {{ user.matrices|length }} parties -  {% if user.level %}Niveau {{ user.level.level }} {% else %} Pas de carriere {% endif %}
-        </h2>
-        {% for matrice in user.matrices %}
-            <a href="{{ path('matrice', {matrice: matrice.id}) }}">{{ matrice.score }} </a>{{ matrice.createdAt|date('d/m/y H:i:s') }}
+    </div>
+    <div>
+        <h2>Dernières</h2>
+        <ul>
+        {% for matrice in last_matrices %}
+            <li>
+                <span>{{ matrice.user.username }}</span> <a href="{{ path('matrice', {matrice: matrice.id}) }}">{{ matrice.score }} </a>{{ matrice.createdAt|date('d/m/y H:i:s') }}
+            </li>
         {% endfor %}
-    {% endfor %}
+        </ul>
+    </div>
+    <ul class="list-group">
+        {% for user in users %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#user-{{ user.id }}">
+                    {{ user.username }}
+                </button>
+                {% include 'admin/_modal_score.html.twig' %}
+                <h2>
+                    <span class="badge badge-success badge-pill">
+                        {{ user.matrices|length }} parties -
+                        {% if user.level %}
+                            Niveau {{ user.level.level }}
+                        {% else %}
+                            Niveau X
+                        {% endif %}
+                    </span>
+                </h2>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

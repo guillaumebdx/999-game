@@ -63,15 +63,18 @@ for (let i=0; i< blocks.length; i++) {
 }
 
 const resetButton = document.getElementById('raz');
-resetButton.addEventListener('click', (e) => {
-    for (let i=0; i< inputs.length; i++) {
-        inputs[i].checked = false;
-        blocks[i].classList.remove('forbiddenLabel')
-        previousX = 0;
-        previousY = 0;
-        previousNumber = 0;
-    }
-})
+if (resetButton) {
+    resetButton.addEventListener('click', (e) => {
+        for (let i=0; i< inputs.length; i++) {
+            inputs[i].checked = false;
+            blocks[i].classList.remove('forbiddenLabel')
+            previousX = 0;
+            previousY = 0;
+            previousNumber = 0;
+        }
+    })
+}
+
 
 
 

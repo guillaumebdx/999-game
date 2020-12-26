@@ -24,11 +24,12 @@ class AdminController extends AbstractController
     public function index(UserRepository $userRepository, MatriceRepository $matriceRepository, LevelRepository $levelRepository): Response
     {
         $bestMatrice = $matriceRepository->findOneBy(['isTraining' => true], ['score' => 'DESC']);
-
+        $lastMatrices = $matriceRepository->findBy([], ['createdAt' => 'DESC'], 5);
         return $this->render('admin/index.html.twig', [
             'users' => $userRepository->findAll(),
             'best_matrice' => $bestMatrice,
             'levels' => $levelRepository->findAll(),
+            'last_matrices' => $lastMatrices,
         ]);
     }
 
