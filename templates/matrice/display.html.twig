@@ -19,13 +19,16 @@
             </span>
             <span class="badge badge-secondary">
                 Objectif : {{ app.user.level.target }}
+            </span>
+            <span class="badge badge-secondary">
+                Mélanges : {{ app.user.level.shuffleCount }}
             </span><br>
         {% endif %}
         Score : <strong>{{ matrice.score }}</strong>
     </p>
     <div class="matrice">
         <form action="" method="post">
-            {% for block in matrice.blocks %}
+            {% for block in blocks_in_order %}
                 {% if loop.index == 1 %}
                     <div class="d-flex">
                 {% endif %}
@@ -39,9 +42,27 @@
             {% endfor %}
             <button class="btn btn-primary">OK</button>
         </form>
+        <form action="{{ path('shuffle', {matrice: matrice.id}) }}">
+            {% if matrice.score == 0 %}
+                <button class="btn btn-success">
+                    Début de partie, mélange illimité
+                </button>
+            {% elseif matrice.shuffledCount > 0 %}
+                <button class="btn btn-success">
+                    Mélange restant : {{ matrice.shuffledCount }}
+                </button>
+            {% else %}
+                <button disabled class="btn btn-success disabled">
+                    Mélange restant : {{ matrice.shuffledCount ?? 0 }}
+                </button>
+            {% endif %}
+        </form>
         {% if matrice.isTraining %}
             <a class="btn btn-secondary" role="button" onclick="return confirm('Êtes vous certain de remmettre la grille à zéro ?');" href="{{ path('replay', { isCarriere: 0 }) }}">Rejouer</a>
         {% endif %}
+
         <button class="btn btn-secondary reset-button" id="raz">RAZ</button>
+
+
     </div>
 {% endblock %}

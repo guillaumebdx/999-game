@@ -16,6 +16,7 @@ class LevelType extends AbstractType
             ->add('multiple')
             ->add('maxNumber')
             ->add('target')
+            ->add('shuffleCount')
         ;
     }
 

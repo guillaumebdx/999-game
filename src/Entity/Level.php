@@ -44,6 +44,11 @@ class Level
      */
     private $level;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $shuffleCount;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -128,6 +133,18 @@ class Level
     public function setLevel(int $level): self
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    public function getShuffleCount(): ?int
+    {
+        return $this->shuffleCount;
+    }
+
+    public function setShuffleCount(?int $shuffleCount): self
+    {
+        $this->shuffleCount = $shuffleCount;
 
         return $this;
     }

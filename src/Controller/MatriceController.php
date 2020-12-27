@@ -59,8 +59,10 @@ class MatriceController extends AbstractController
         $maxNumber = 6;
         $matrice   = new Matrice();
         $matrice->setIsTraining(true);
+        $matrice->setShuffledCount(3);
         if ($isCarriere) {
             $matrice->setIsTraining(false);
+            $matrice->setShuffledCount($user->getLevel()->getShuffleCount());
             if (!$user->getLevel()) {
                 $levelZero = $levelRepository->findOneByLevel(0);
                 $user->setLevel($levelZero);
@@ -130,10 +132,47 @@ class MatriceController extends AbstractController
                 }
             }
         }
+        $blocksInOrder = $blockRepository->findBy(['matrice' => $matrice], ['x' => 'ASC', 'y' => 'ASC']);
+      //  dd($blocksInOrder);
         return $this->render('matrice/display.html.twig', [
+            'blocks_in_order' => $blocksInOrder,
             'matrice' => $matrice,
             'best_matrice' => $matriceRepository->findOneBy([], ['isTraining' => 'DESC', 'score' => 'DESC']),
         ]);
+    }
+
+    /**
+     * @Route("/shuffle/{matrice}", name="shuffle")
+     */
+    public function shuffle(Matrice $matrice, EntityManagerInterface $entityManager)
+    {
+        if($matrice->getScore() > 0 && $matrice->getShuffledCount() <= 0) {
+            return $this->redirectToRoute('matrice', ['matrice' => $matrice->getId()]);
+        }
+        $matriceBlocks = $matrice->getBlocks();
+        $coordonates = [];
+
+        foreach ($matriceBlocks as $block) {
+            $coordonates[] = [
+                'x' => $block->getX(),
+                'y' => $block->getY(),
+            ];
+        }
+        shuffle($coordonates);
+        $blocks = $matrice->getBlocks();
+        for ($i=0; $i<count($blocks); $i++) {
+            $blocks[$i]->setX($coordonates[$i]['x']);
+            $blocks[$i]->setY($coordonates[$i]['y']);
+            $entityManager->persist($blocks[$i]);
+        }
+        if ($matrice->getScore() > 0) {
+            $matrice->useOneShuffle();
+            $entityManager->persist($matrice);
+        }
+        $entityManager->flush();
+
+        return $this->redirectToRoute('matrice', ['matrice' => $matrice->getId()]);
+
     }
 }
 

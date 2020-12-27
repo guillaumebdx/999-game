@@ -62,6 +62,11 @@ class Matrice
      */
     private $isTraining;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $shuffledCount;
+
     public function __construct()
     {
         $this->blocks = new ArrayCollection();
@@ -193,5 +198,22 @@ class Matrice
         $this->isTraining = $isTraining;
 
         return $this;
+    }
+
+    public function getShuffledCount(): ?int
+    {
+        return $this->shuffledCount;
+    }
+
+    public function setShuffledCount(?int $shuffledCount): self
+    {
+        $this->shuffledCount = $shuffledCount;
+
+        return $this;
+    }
+
+    public function useOneShuffle(): void
+    {
+        $this->shuffledCount = $this->shuffledCount -1;
     }
 }
