@@ -113,38 +113,10 @@ class MatriceController extends AbstractController
             $entityManager->persist($matrice);
             $inDbBlocks = $blockRepository->findByMatrice($matrice);
 
-            //get all unchecked blocks and add it in blocks
-            for ($i=0; $i<$matrice->getMultiple()**2; $i++) {
-                if (!in_array($inDbBlocks[$i], $blocks)) {
-                    $blocks[$inDbBlocks[$i]->getX() . '-' . $inDbBlocks[$i]->getY()] = $inDbBlocks[$i];
-                }
-            }
-            for ($i=0; $i<$matrice->getMultiple()**2; $i++) {
-                for ($x=1; $x<=$matrice->getMultiple(); $x++ ) {
-                    for ($y=1; $y<=$matrice->getMultiple(); $y++) {
-                        $currentBlock = $blocks[$x . '-' . $y];
-                        if ($currentBlock->getNumber() == 0) {
-                            if (isset($blocks[$x-1 . '-' . $y])) {
-                                $aboveBlock = $blocks[$x-1 . '-' . $y];
-                                $currentBlock->setNumber($aboveBlock->getNumber());
-                                $aboveBlock->setNumber(0);
-                                $entityManager->persist($aboveBlock);
-                                $entityManager->persist($currentBlock);
-                            } else {
-                                if ($matrice->getIncrementNewBlock() < Matrice::MAX_INCREMENT) {
-                                    $currentBlock->setNumber(rand(1,$maxNumber -1));
-                                    $matrice->setIncrementNewBlock($matrice->getIncrementNewBlock()+1);
-                                } else {
-                                    $currentBlock->setNumber(999);
-                                }
-                                $entityManager->persist($currentBlock);
 
-                            }
-
-                        }
-                    }
-                }
-            }
+            $multiple = $matrice->getMultiple();
+            $blocks = $blockManager->addUncheckedBlock($inDbBlocks, $blocks, $multiple);
+            $blockManager->makeItFall($matrice, $maxNumber, $blocks);
             $entityManager->flush();
             if (!$matrice->getIsTraining()) {
                 $currentLevel = $this->getUser()->getLevel();
