@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="home">
+        <h1>10 meilleurs utilisateurs</h1>
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                       {{ loop.index }} - {{ user.username }}
+                    </div>
+                    <h2>
+                    <span class="badge badge-success badge-pill">
+                        {{ user.matrices|length }} parties -
+                        {% if user.level %}
+                            Niveau {{ user.level.level }}
+                        {% else %}
+                            Niveau X
+                        {% endif %}
+                    </span>
+                    </h2>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

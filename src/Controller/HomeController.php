@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\LevelRepository;
 use App\Repository\MatriceRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,16 @@ class HomeController extends AbstractController
         $matrices = $matriceRepository->findBy(['isTraining' => true], ['score' => 'DESC'], 50);
         return $this->render('home/ranking.html.twig', [
             'matrices' => $matrices,
+        ]);
+    }
+
+    /**
+     * @Route("/users", name="users")
+     */
+    public function users(UserRepository $userRepository)
+    {
+        return $this->render('home/users.html.twig', [
+           'users' => $userRepository->findBy([], ['level' => 'DESC'], 10),
         ]);
     }
 }
