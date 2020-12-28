@@ -133,7 +133,7 @@ class MatriceController extends AbstractController
             }
         }
         $blocksInOrder = $blockRepository->findBy(['matrice' => $matrice], ['x' => 'ASC', 'y' => 'ASC']);
-      //  dd($blocksInOrder);
+
         return $this->render('matrice/display.html.twig', [
             'blocks_in_order' => $blocksInOrder,
             'matrice' => $matrice,
