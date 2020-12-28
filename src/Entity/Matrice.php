@@ -14,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Matrice
 {
     const MAX_INCREMENT = 20;
+
+    const EMPTY_BLOCK = 999;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -97,6 +99,16 @@ class Matrice
         return $this->blocks;
     }
 
+    public function getNotEmptyBlocks()
+    {
+        $blocks = [];
+        foreach ($this->blocks as $block) {
+            if ($block->getNumber() !== self::EMPTY_BLOCK) {
+                $blocks[] = $block;
+            }
+        }
+        return $blocks;
+    }
     public function addBlock(Block $block): self
     {
         if (!$this->blocks->contains($block)) {

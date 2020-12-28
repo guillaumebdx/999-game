@@ -153,17 +153,23 @@ class MatriceController extends AbstractController
         $coordonates = [];
 
         foreach ($matriceBlocks as $block) {
-            $coordonates[] = [
-                'x' => $block->getX(),
-                'y' => $block->getY(),
-            ];
+            if ($block->getNumber() !== Matrice::EMPTY_BLOCK) {
+                $coordonates[] = [
+                    'x' => $block->getX(),
+                    'y' => $block->getY(),
+                ];
+            }
+
         }
         shuffle($coordonates);
-        $blocks = $matrice->getBlocks();
+        $blocks = $matrice->getNotEmptyBlocks();
         for ($i=0; $i<count($blocks); $i++) {
-            $blocks[$i]->setX($coordonates[$i]['x']);
-            $blocks[$i]->setY($coordonates[$i]['y']);
-            $entityManager->persist($blocks[$i]);
+            if ($blocks[$i]->getNumber() !== Matrice::EMPTY_BLOCK) {
+                $blocks[$i]->setX($coordonates[$i]['x']);
+                $blocks[$i]->setY($coordonates[$i]['y']);
+                $entityManager->persist($blocks[$i]);
+            }
+
         }
         if ($matrice->getScore() > 0) {
             $matrice->useOneShuffle();

@@ -90,7 +90,7 @@ class BlockManager
                                 $currentBlock->setNumber(rand(1,$maxNumber -1));
                                 $matrice->setIncrementNewBlock($matrice->getIncrementNewBlock()+1);
                             } else {
-                                $currentBlock->setNumber(999);
+                                $currentBlock->setNumber(Matrice::EMPTY_BLOCK);
                             }
                             $this->entityManager->persist($currentBlock);
 
