@@ -62,7 +62,7 @@ class MatriceController extends AbstractController
         $matrice->setShuffledCount(3);
         if ($isCarriere) {
             $matrice->setIsTraining(false);
-            $matrice->setShuffledCount($user->getLevel()->getShuffleCount());
+            $matrice->setShuffledCount($user->getLevel() ? $user->getLevel()->getShuffleCount() : 5);
             if (!$user->getLevel()) {
                 $levelZero = $levelRepository->findOneByLevel(0);
                 $user->setLevel($levelZero);
